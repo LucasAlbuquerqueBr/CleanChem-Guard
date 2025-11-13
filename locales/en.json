@@ -5,6 +5,29 @@
   "nav.ai": "AI Chat",
   "nav.profile": "Profile",
 
+  "hero.title": "CleanChem Guard",
+  "hero.tagline": "Connecting those who make cleaning an art.",
+  "hero.blurb": "Meet CleanChainGuard, an intelligent network of cleaners who exchange knowledge, safety and results.",
+  "hero.cta_join": "Join the community",
+  "hero.section_title": "Together, we raise the standard of cleaning.",
+  "hero.section_p1": "Connect with professionals who share the best products, techniques and experiences.",
+  "hero.section_p2": "CleanChainGuard is where those who clean with excellence become reference - now with AI support to answer your questions on products, methods and safety.",
+  "hero.section_p3": "Make better use of each product, work with more confidence and take care of your health and well-being.",
+  "hero.section_p4": "Productivity, safety and wisdom - all in one place.",
+  "hero.f1_title": "Shared wisdom",
+  "hero.f1_desc": "Learn from the experience of other professionals.",
+  "hero.f2_title": "Real productivity",
+  "hero.f2_desc": "Optimize time and results with proven methods.",
+  "hero.f3_title": "Quality and safety",
+  "hero.f3_desc": "Recommended products and safe usage, supported by AI.",
+  "hero.f4_title": "Connection and community",
+  "hero.f4_desc": "Engage with people facing the same challenges and wins.",
+  "hero.bottom_title": "More than a platform - a network for evolution.",
+  "hero.bottom_p1": "At CleanChainGuard, every professional has a voice.",
+  "hero.bottom_p2": "Share methods, learn new techniques, discover products approved by those who really know, and increase your on-the-job safety.",
+  "hero.bottom_p3": "Smart cleaning starts with collaboration.",
+  "hero.view_gallery": "View gallery",
+
   "home.title": "Welcome to CleanChem Social",
   "home.subtitle": "A small social app with Gallery, Chats, and AI.",
   "home.cta_gallery": "Go to Gallery",
@@ -58,4 +81,3 @@
   "ai.placeholder": "Ask something...",
   "ai.send": "Send"
 }
-

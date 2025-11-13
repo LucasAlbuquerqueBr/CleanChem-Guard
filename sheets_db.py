@@ -47,6 +47,9 @@ class SheetsDB:
         self.messages_ws = self._ensure_ws("messages", [
             "id", "chat_id", "sender_id", "content", "created_at"
         ])
+        self.chat_reads_ws = self._ensure_ws("chat_reads", [
+            "id", "chat_id", "user_id", "last_read_at"
+        ])
 
     def _auth_client(self, path: Optional[str], json_str: Optional[str]):
         scopes = [
@@ -197,3 +200,40 @@ class SheetsDB:
         msgs.sort(key=lambda x: x.get("created_at", ""))
         return msgs
 
+    # Chat read state
+    def get_last_read_at(self, chat_id: str, user_id: str) -> Optional[str]:
+        for r in self._get_all(self.chat_reads_ws):
+            if r.get("chat_id") == chat_id and r.get("user_id") == user_id:
+                return r.get("last_read_at")
+        return None
+
+    def set_last_read(self, chat_id: str, user_id: str, ts: Optional[str] = None) -> str:
+        ts = ts or datetime.utcnow().isoformat()
+        records = self._get_all(self.chat_reads_ws)
+        # find row index by composite key
+        for i, r in enumerate(records, start=2):
+            if r.get("chat_id") == chat_id and r.get("user_id") == user_id:
+                self.chat_reads_ws.update(f"D{i}", ts)
+                return ts
+        rec = {"id": str(uuid.uuid4()), "chat_id": chat_id, "user_id": user_id, "last_read_at": ts}
+        self._append(self.chat_reads_ws, ["id", "chat_id", "user_id", "last_read_at"], rec)
+        return ts
+
+    def count_unread_chats_for_user(self, user_id: str) -> int:
+        unread = 0
+        chats = self.list_chats_for_user(user_id)
+        all_msgs = self._get_all(self.messages_ws)
+        for c in chats:
+            cid = c.get("id")
+            last_read = self.get_last_read_at(cid, user_id)
+            # messages from others
+            msgs = [m for m in all_msgs if m.get("chat_id") == cid and str(m.get("sender_id")) != str(user_id)]
+            if not msgs:
+                continue
+            if not last_read:
+                unread += 1
+                continue
+            latest_after = any((m.get("created_at", "") > last_read) for m in msgs)
+            if latest_after:
+                unread += 1
+        return unread

@@ -52,6 +52,11 @@ def chat_room(chat_id):
         abort(404)
     partner_id = chat["user1_id"] if chat["user2_id"] == current_user.id else chat["user2_id"]
     partner = db.get_user_by_id(partner_id)
+    # Mark as read for current user when opening the room
+    try:
+        db.set_last_read(chat_id, str(current_user.id))
+    except Exception:
+        pass
     return render_template("chat_room.html", chat=chat, partner=partner)
 
 
@@ -79,4 +84,3 @@ def api_send_message(chat_id):
         return jsonify({"ok": False}), 400
     msg = db.add_message(chat_id, current_user.id, content)
     return jsonify({"ok": True, "message": msg})
-

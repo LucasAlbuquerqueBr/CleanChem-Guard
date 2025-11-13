@@ -5,6 +5,29 @@
   "nav.ai": "Chat IA",
   "nav.profile": "Perfil",
 
+  "hero.title": "CleanChem Guard",
+  "hero.tagline": "Conectando a quienes hacen de la limpieza un arte.",
+  "hero.blurb": "Conoce CleanChainGuard, una red inteligente de cleaners que comparten conocimiento, seguridad y resultados.",
+  "hero.cta_join": "Unirse a la comunidad",
+  "hero.section_title": "Juntos, elevamos el estándar de la limpieza.",
+  "hero.section_p1": "Conéctate con profesionales que comparten los mejores productos, técnicas y experiencias.",
+  "hero.section_p2": "CleanChainGuard es la comunidad donde quien limpia con excelencia se vuelve referencia - ahora con soporte de IA para resolver tus dudas sobre productos, métodos y seguridad.",
+  "hero.section_p3": "Aprovecha mejor cada producto, trabaja con más confianza y cuida tu salud y bienestar.",
+  "hero.section_p4": "Productividad, seguridad y sabiduría - todo en un solo lugar.",
+  "hero.f1_title": "Sabiduría compartida",
+  "hero.f1_desc": "Aprende de la experiencia de otros profesionales.",
+  "hero.f2_title": "Productividad real",
+  "hero.f2_desc": "Optimiza tiempo y resultados con métodos probados.",
+  "hero.f3_title": "Calidad y seguridad",
+  "hero.f3_desc": "Productos recomendados y uso seguro, con apoyo de IA.",
+  "hero.f4_title": "Conexión y comunidad",
+  "hero.f4_desc": "Interacciona con quienes viven los mismos desafíos y logros.",
+  "hero.bottom_title": "Más que una plataforma - una red de evolución.",
+  "hero.bottom_p1": "En CleanChainGuard, cada profesional tiene voz.",
+  "hero.bottom_p2": "Comparte métodos, aprende nuevas técnicas, descubre productos aprobados por quienes realmente saben y aumenta tu seguridad en el trabajo.",
+  "hero.bottom_p3": "La limpieza inteligente comienza con colaboración.",
+  "hero.view_gallery": "Ver galería",
+
   "home.title": "Bienvenido a CleanChem Social",
   "home.subtitle": "Una red social sencilla con Galería, Chats y IA.",
   "home.cta_gallery": "Ir a la Galería",
@@ -58,4 +81,3 @@
   "ai.placeholder": "Pregunta algo...",
   "ai.send": "Enviar"
 }
-

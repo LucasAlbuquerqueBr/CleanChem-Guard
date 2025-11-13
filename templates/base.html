@@ -24,34 +24,61 @@
   <style>
     body { background-color: #F3F3F3; }
   </style>
+  <script defer src="{{ url_for('static', filename='app.js') }}"></script>
+  <script>
+    // Small CSS helper to animate dropdown (optional)
+    document.addEventListener('DOMContentLoaded', () => {
+      const menu = document.getElementById('langMenu');
+      if (menu) menu.classList.add('transition', 'duration-150', 'origin-top-right');
+    });
+  </script>
 </head>
 <body class="min-h-screen text-brand-dark">
-  <nav class="bg-brand-dark text-brand-white">
+  <nav class="bg-brand-dark text-brand-white relative z-50">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
       <a href="{{ url_for('index') }}" class="flex items-center gap-3 font-bold">
         <img src="{{ url_for('static', filename='branding/ChatGPT Image Nov 11, 2025, 10_42_27 PM.png') }}" alt="CleanChem Guard" class="h-9 w-9 object-contain"/>
         <span>CleanChem Guard</span>
       </a>
       <div class="flex items-center gap-4">
-        <a class="hover:text-brand-yellow" href="{{ url_for('index') }}">{{ _('nav.home') }}</a>
-        <a class="hover:text-brand-yellow" href="{{ url_for('gallery.gallery_index') }}">{{ _('nav.gallery') }}</a>
+        <a class="hover:text-brand-yellow {% if active_section=='home' %}text-brand-yellow font-semibold{% endif %}" href="{{ url_for('index') }}">{{ _('nav.home') }}</a>
         {% if current_user.is_authenticated %}
-          <a class="hover:text-brand-yellow" href="{{ url_for('chat.list_chats') }}">{{ _('nav.chats') }}</a>
-          <a class="hover:text-brand-yellow" href="{{ url_for('ai.ai_page') }}">{{ _('nav.ai') }}</a>
-          <a class="hover:text-brand-yellow" href="{{ url_for('auth.user_page', username=current_user.username) }}">{{ _('nav.profile') }}</a>
+          <a class="hover:text-brand-yellow {% if active_section=='gallery' %}text-brand-yellow font-semibold{% endif %}" href="{{ url_for('gallery.gallery_index') }}">{{ _('nav.gallery') }}</a>
+          <a class="hover:text-brand-yellow relative {% if active_section=='chats' %}text-brand-yellow font-semibold{% endif %}" href="{{ url_for('chat.list_chats') }}">
+            {{ _('nav.chats') }}
+            {% if unread_chats and unread_chats > 0 %}
+              <span class="absolute -top-2 -right-3 text-[10px] bg-brand-yellow text-brand-dark rounded-full px-1.5 py-0.5 font-bold">{{ unread_chats }}</span>
+            {% endif %}
+          </a>
+          <a class="hover:text-brand-yellow {% if active_section=='ai' %}text-brand-yellow font-semibold{% endif %}" href="{{ url_for('ai.ai_page') }}">{{ _('nav.ai') }}</a>
+          <a class="hover:text-brand-yellow {% if active_section=='auth' %}text-brand-yellow font-semibold{% endif %}" href="{{ url_for('auth.user_page', username=current_user.username) }}">{{ _('nav.profile') }}</a>
           <a class="hover:text-brand-yellow" href="{{ url_for('auth.logout') }}">{{ _('auth.logout') }}</a>
         {% else %}
           <a class="hover:text-brand-yellow" href="{{ url_for('auth.login') }}">{{ _('auth.login') }}</a>
           <a class="hover:text-brand-yellow" href="{{ url_for('auth.register') }}">{{ _('auth.register') }}</a>
         {% endif %}
-        <div class="ml-4">
-          <form method="get" action="" id="langForm">
-            <select name="lang" class="text-brand-dark" onchange="document.getElementById('langForm').submit()">
-              {% for lang in ['pt-br','en','es'] %}
-              <option value="{{ lang }}" {% if current_lang==lang %}selected{% endif %}>{{ lang }}</option>
-              {% endfor %}
-            </select>
-          </form>
+
+        <!-- Language dropdown (flags without emojis) -->
+        <div class="ml-4 relative">
+          <button id="langToggle" class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-white/10 hover:bg-white/20 transition border border-white/20 shadow-sm" onclick="toggleLangMenu()" aria-haspopup="true" aria-expanded="false">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="opacity-80"><path d="M12 2a10 10 0 100 20 10 10 0 000-20Z"/><path d="M2 12h20"/><path d="M12 2c3 3 3 17 0 20"/></svg>
+            <span class="uppercase text-sm font-semibold">{{ 'PT' if current_lang.startswith('pt') else ('ES' if current_lang.startswith('es') else 'EN') }}</span>
+            <svg class="w-4 h-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div id="langMenu" class="absolute right-0 mt-2 w-44 bg-white text-brand-dark rounded-md shadow-xl border border-gray-100 hidden z-50">
+            <a href="#" class="group flex items-center gap-2 px-3 py-2 hover:bg-brand-gray transition" onclick="switchLang('en')">
+              <svg width="16" height="12" viewBox="0 0 16 12"><rect width="16" height="12" fill="#012169"/><rect x="7" width="2" height="12" fill="#fff"/><rect y="5" width="16" height="2" fill="#fff"/></svg>
+              <span class="text-sm font-medium">EN · English</span>
+            </a>
+            <a href="#" class="group flex items-center gap-2 px-3 py-2 hover:bg-brand-gray transition" onclick="switchLang('pt-br')">
+              <svg width="16" height="12" viewBox="0 0 16 12"><rect width="16" height="12" fill="#009b3a"/><polygon points="8,1 15,6 8,11 1,6" fill="#ffdf00"/><circle cx="8" cy="6" r="2" fill="#002776"/></svg>
+              <span class="text-sm font-medium">PT · Português</span>
+            </a>
+            <a href="#" class="group flex items-center gap-2 px-3 py-2 hover:bg-brand-gray transition" onclick="switchLang('es')">
+              <svg width="16" height="12" viewBox="0 0 16 12"><rect width="16" height="12" fill="#c60b1e"/><rect y="3" width="16" height="6" fill="#ffc400"/></svg>
+              <span class="text-sm font-medium">ES · Español</span>
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -71,6 +98,5 @@
   </main>
 
   <footer class="mt-10 py-6 text-center text-sm text-brand-dark/70">© CleanChem Guard</footer>
-  <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>

@@ -11,6 +11,7 @@ bp = Blueprint("gallery", __name__, url_prefix="/gallery")
 
 
 @bp.route("/", methods=["GET"])
+@login_required
 def gallery_index():
     db = SheetsDB.get()
     tag = request.args.get("tag")
@@ -58,4 +59,3 @@ def upload():
     )
     flash(t("gallery.upload_success"))
     return redirect(url_for("gallery.gallery_index"))
-
