@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-md mx-auto bg-white p-6 rounded shadow">
+  <h1 class="text-xl font-bold mb-4">{{ _('auth.register') }}</h1>
+  <form method="post">
+    <label class="block mb-2">{{ _('auth.username') }}</label>
+    <input class="w-full border p-2 mb-4" name="username" required />
+    <label class="block mb-2">{{ _('auth.email') }}</label>
+    <input class="w-full border p-2 mb-4" name="email" type="email" />
+    <label class="block mb-2">{{ _('auth.password') }}</label>
+    <input class="w-full border p-2 mb-4" name="password" type="password" required />
+    <button class="bg-brand-dark text-white px-4 py-2 rounded">{{ _('auth.create_account') }}</button>
+  </form>
+{% endblock %}
+

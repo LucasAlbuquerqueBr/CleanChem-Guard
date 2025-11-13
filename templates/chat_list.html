@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <div class="bg-white p-4 rounded shadow">
+    <h2 class="text-lg font-semibold mb-2">{{ _('chat.new_chat') }}</h2>
+    <form method="post" action="{{ url_for('chat.start_chat') }}" class="flex gap-2">
+      <input class="border p-2 flex-1" name="username" placeholder="{{ _('chat.username_placeholder') }}" required />
+      <button class="bg-brand-dark text-white px-4 py-2 rounded">{{ _('chat.start') }}</button>
+    </form>
+  </div>
+  <div class="md:col-span-2 bg-white p-4 rounded shadow">
+    <h2 class="text-lg font-semibold mb-2">{{ _('chat.your_chats') }}</h2>
+    <ul class="divide-y">
+      {% for c in chats %}
+      <li class="py-2 flex items-center justify-between">
+        <div>@{{ c.partner }}</div>
+        <a class="underline" href="{{ url_for('chat.chat_room', chat_id=c.id) }}">{{ _('chat.open') }}</a>
+      </li>
+      {% else %}
+      <li class="py-2 text-brand-dark/70">{{ _('chat.no_chats') }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}
+

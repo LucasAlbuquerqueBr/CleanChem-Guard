@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="bg-white p-4 rounded shadow">
+  {% if not user %}
+    <div>{{ _('user.not_found') }}</div>
+  {% else %}
+    <div class="flex items-center justify-between">
+      <h1 class="text-2xl font-bold">@{{ user.username }}</h1>
+      <div class="text-sm text-brand-dark/70">{{ _('user.posts_count') }}: {{ posts|length }}</div>
+    </div>
+  {% endif %}
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+  {% for p in posts %}
+  <div class="bg-white rounded shadow overflow-hidden">
+    {% if p.media_type == 'video' %}
+      <video controls class="w-full"><source src="{{ p.media_url }}" /></video>
+    {% else %}
+      <img src="{{ p.media_url }}" class="w-full" />
+    {% endif %}
+    <div class="p-4">
+      <div class="text-sm text-brand-dark/70">{{ p.created_at }}</div>
+      <p>{{ p.content }}</p>
+    </div>
+  </div>
+  {% else %}
+  <div class="col-span-3 text-center text-brand-dark/70">{{ _('user.no_posts') }}</div>
+  {% endfor %}
+</div>
+{% endblock %}
+

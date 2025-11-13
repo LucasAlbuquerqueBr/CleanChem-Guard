@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="bg-white rounded shadow p-4">
+  <h1 class="text-xl font-bold mb-2">{{ _('ai.title') }}</h1>
+  <div id="aiBox" class="h-80 overflow-y-auto border p-2 rounded bg-brand-gray"></div>
+  <div class="mt-2 flex gap-2">
+    <input id="aiInput" class="border p-2 flex-1" placeholder="{{ _('ai.placeholder') }}" />
+    <button id="aiSend" class="bg-brand-dark text-white px-4 py-2 rounded">{{ _('ai.send') }}</button>
+  </div>
+</div>
+<script>
+  const box = document.getElementById('aiBox');
+  function add(role, text) {
+    const wrap = document.createElement('div');
+    wrap.className = 'my-1';
+    wrap.innerHTML = `<div class="px-3 py-2 rounded ${role==='user'?'bg-brand-yellow':'bg-white'} max-w-[80%]">${text}</div>`;
+    box.appendChild(wrap);
+    box.scrollTop = box.scrollHeight;
+  }
+  document.getElementById('aiSend').onclick = async () => {
+    const input = document.getElementById('aiInput');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value='';
+    add('user', text);
+    const res = await fetch('/ai/api/chat', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({message:text})});
+    const data = await res.json();
+    add('assistant', data.reply || (data.error || 'error'));
+  };
+</script>
+{% endblock %}
+

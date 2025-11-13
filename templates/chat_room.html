@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="bg-white rounded shadow p-4">
+  <h1 class="text-xl font-bold mb-2">{{ _('chat.with') }} @{{ partner.username }}</h1>
+  <div id="messages" class="h-80 overflow-y-auto border p-2 rounded bg-brand-gray"></div>
+  <div class="mt-2 flex gap-2">
+    <input id="msgInput" class="border p-2 flex-1" placeholder="{{ _('chat.type_message') }}" />
+    <button id="sendBtn" class="bg-brand-dark text-white px-4 py-2 rounded">{{ _('chat.send') }}</button>
+  </div>
+</div>
+<script>
+  const chatId = "{{ chat.id }}";
+  let since = "";
+  const box = document.getElementById('messages');
+
+  async function fetchMessages() {
+    const res = await fetch(`/chat/api/${chatId}/messages?since=${encodeURIComponent(since)}`);
+    const data = await res.json();
+    for (const m of data.messages) {
+      const wrap = document.createElement('div');
+      const mine = m.sender_id === "{{ current_user.id }}";
+      wrap.className = `my-1 flex ${mine?'justify-end':'justify-start'}`;
+      wrap.innerHTML = `<div class="px-3 py-2 rounded ${mine?'bg-brand-yellow':'bg-white'} max-w-[70%]">${m.content}</div>`;
+      box.appendChild(wrap);
+      since = m.created_at;
+    }
+    if (data.messages.length) box.scrollTop = box.scrollHeight;
+  }
+  setInterval(fetchMessages, 2000);
+  fetchMessages();
+
+  document.getElementById('sendBtn').onclick = async () => {
+    const input = document.getElementById('msgInput');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value='';
+    await fetch(`/chat/api/${chatId}/messages`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({content:text})});
+    fetchMessages();
+  };
+</script>
+{% endblock %}
+

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Seção 1: topo com logo, título e CTAs -->
+<section class="relative overflow-hidden rounded-2xl" style="background:#2C2E43">
+  <div class="absolute inset-0 bg-cover bg-center opacity-30" style="background-image:url('{{ url_for('static', filename='hero/ChatGPT Image Nov 11, 2025, 11_07_31 PM.png') }}');"></div>
+  <div class="absolute inset-0 bg-gradient-to-b from-[#2C2E43]/70 via-[#2C2E43]/60 to-[#2C2E43]/80"></div>
+  <div class="relative z-10 px-6 py-12 md:py-20 text-brand-white">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+      <div class="flex items-center gap-4">
+        <img src="{{ url_for('static', filename='branding/ChatGPT Image Nov 11, 2025, 10_42_27 PM.png') }}" alt="CleanChem Guard" class="h-20 w-20 object-contain drop-shadow"/>
+        <div>
+          <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight">CleanChem Guard</h1>
+          <p class="text-brand-gray text-lg md:text-xl">Conectando quem faz da limpeza uma arte.</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="{{ url_for('auth.login') }}" class="px-5 py-2.5 rounded-lg bg-white text-brand-dark font-semibold hover:bg-brand-gray transition">Login</a>
+        <a href="{{ url_for('auth.register') }}" class="px-5 py-2.5 rounded-lg bg-brand-yellow text-brand-dark font-semibold hover:brightness-95 transition">Inscrever-se</a>
+      </div>
+    </div>
+    <div class="mt-10 max-w-3xl">
+      <p class="text-xl md:text-2xl text-brand-gray">
+        Conheça a CleanChainGuard, uma rede inteligente de cleaners que trocam conhecimento, segurança e resultados.
+      </p>
+      <div class="mt-8">
+        <a href="{{ url_for('auth.register') }}" class="inline-block px-7 py-3.5 rounded-lg bg-brand-yellow text-brand-dark font-bold hover:brightness-95 shadow">
+          Entrar na comunidade
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Seção 2: bloco central com mensagem e ícones -->
+<section class="mt-10 bg-white rounded-2xl shadow p-7 md:p-12">
+  <div class="max-w-4xl mx-auto text-center">
+    <h2 class="text-3xl md:text-4xl font-extrabold text-brand-dark tracking-tight">Juntos, elevamos o padrão da limpeza.</h2>
+    <p class="mt-5 text-brand-dark/80 text-lg">Conecte-se com profissionais que compartilham os melhores produtos, técnicas e experiências.</p>
+    <p class="mt-3 text-brand-dark/80 text-lg">A CleanChainGuard é a comunidade onde quem limpa com excelência se torna referência — agora com o suporte de uma inteligência artificial que tira suas dúvidas sobre produtos, métodos e segurança.</p>
+    <p class="mt-3 text-brand-dark/80 text-lg">Use melhor cada produto, trabalhe com mais confiança e cuide da sua saúde e bem-estar.</p>
+    <p class="mt-3 text-brand-dark/80 text-lg">Produtividade, segurança e sabedoria  tudo em um só lugar.</p>
+
+    <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+      <div class="p-5 rounded-lg border">
+        <div class="text-2xl">🧠</div>
+        <div class="mt-2 font-semibold text-lg">Sabedoria compartilhada</div>
+        <div class="text-brand-dark/80">Aprenda com a experiência de outros profissionais.</div>
+      </div>
+      <div class="p-5 rounded-lg border">
+        <div class="text-2xl">⚙️</div>
+        <div class="mt-2 font-semibold text-lg">Produtividade real</div>
+        <div class="text-brand-dark/80">Otimize tempo e resultados com métodos testados.</div>
+      </div>
+      <div class="p-5 rounded-lg border">
+        <div class="text-2xl">🧴</div>
+        <div class="mt-2 font-semibold text-lg">Qualidade e segurança</div>
+        <div class="text-brand-dark/80">Produtos recomendados e uso seguro comprovado com ajuda de inteligência artificial.</div>
+      </div>
+      <div class="p-5 rounded-lg border">
+        <div class="text-2xl">💬</div>
+        <div class="mt-2 font-semibold text-lg">Conexão e comunidade</div>
+        <div class="text-brand-dark/80">Interaja com quem vive os mesmos desafios e conquistas.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Seção 3: mensagem inferior -->
+<section class="mt-10 bg-brand-dark text-brand-white rounded-2xl p-7 md:p-12">
+  <div class="max-w-4xl mx-auto">
+    <h3 class="text-2xl md:text-3xl font-extrabold">Mais do que uma plataforma  uma rede de evolução.</h3>
+    <p class="mt-4 text-brand-gray text-lg">Na CleanChainGuard, cada profissional tem voz.</p>
+    <p class="mt-3 text-brand-gray text-lg">Compartilhe métodos, aprenda novas técnicas, descubra produtos aprovados por quem realmente entende e aumente sua segurança no trabalho.</p>
+    <p class="mt-3 text-brand-gray text-lg">Limpeza inteligente começa com colaboração.</p>
+  </div>
+  <div class="mt-6 flex gap-3">
+    <a href="{{ url_for('gallery.gallery_index') }}" class="px-5 py-2.5 rounded-lg bg-white text-brand-dark font-semibold hover:bg-brand-gray">Ver Galeria</a>
+    <a href="{{ url_for('auth.login') }}" class="px-5 py-2.5 rounded-lg bg-brand-yellow text-brand-dark font-semibold hover:brightness-95">Fazer Login</a>
+  </div>
+</section>
+
+{% endblock %}

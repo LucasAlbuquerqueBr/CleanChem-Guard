@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="flex flex-col gap-6">
+  <div class="bg-white p-4 rounded shadow">
+    <h2 class="text-lg font-semibold mb-2">{{ _('gallery.filters') }}</h2>
+    <form method="get" class="grid grid-cols-1 md:grid-cols-4 gap-2">
+      <input class="border p-2" name="tag" placeholder="{{ _('gallery.tag') }}" value="{{ request.args.get('tag','') }}" />
+      <input class="border p-2" name="subject" placeholder="{{ _('gallery.subject') }}" value="{{ request.args.get('subject','') }}" />
+      <input class="border p-2" name="q" placeholder="{{ _('gallery.search') }}" value="{{ request.args.get('q','') }}" />
+      <button class="bg-brand-dark text-white rounded px-4 py-2">{{ _('gallery.apply_filters') }}</button>
+    </form>
+  </div>
+
+  {% if current_user.is_authenticated %}
+  <div class="bg-white p-4 rounded shadow">
+    <h2 class="text-lg font-semibold mb-2">{{ _('gallery.upload') }}</h2>
+    <form method="post" action="{{ url_for('gallery.upload') }}" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-2">
+      <input class="border p-2" type="file" name="file" required />
+      <input class="border p-2" name="tags" placeholder="{{ _('gallery.tags_placeholder') }}" />
+      <input class="border p-2" name="subject" placeholder="{{ _('gallery.subject') }}" />
+      <input class="border p-2" name="description" placeholder="{{ _('gallery.description') }}" />
+      <textarea class="border p-2 md:col-span-2" name="content" placeholder="{{ _('gallery.caption') }}"></textarea>
+      <div class="md:col-span-2">
+        <button class="bg-brand-yellow text-brand-dark px-4 py-2 rounded">{{ _('gallery.submit') }}</button>
+      </div>
+    </form>
+  </div>
+  {% endif %}
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    {% for p in posts %}
+    <div class="bg-white rounded shadow overflow-hidden">
+      <div class="aspect-video bg-brand-gray flex items-center justify-center">
+        {% if p.media_type == 'video' %}
+          <video controls class="w-full h-full object-cover">
+            <source src="{{ p.media_url }}" />
+          </video>
+        {% else %}
+          <img src="{{ p.media_url }}" class="w-full h-full object-cover" />
+        {% endif %}
+      </div>
+      <div class="p-4">
+        <p class="text-sm text-brand-dark/80">{{ p.description }}</p>
+        <p class="mt-2">{{ p.content }}</p>
+        <div class="mt-2 text-xs text-brand-dark/60">#{{ p.tags }}</div>
+      </div>
+    </div>
+    {% else %}
+      <div class="col-span-3 text-center text-brand-dark/70">{{ _('gallery.no_results') }}</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
