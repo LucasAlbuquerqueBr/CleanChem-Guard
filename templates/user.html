@@ -32,13 +32,13 @@
   {% for p in posts %}
   <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl border border-gray-100 overflow-hidden transition js-post-card cursor-pointer"
        data-media="{{ p.media_url }}" data-type="{{ p.media_type }}" data-description="{{ p.description|e }}" data-content="{{ p.content|e }}" data-tags="{{ p.tags|e }}" data-created="{{ p.created_at|e }}">
-    <div class="relative aspect-video bg-brand-gray">
+    <div class="relative aspect-video bg-brand-gray flex items-center justify-center">
       {% if p.media_type == 'video' %}
-        <video controls class="w-full h-full object-cover"><source src="{{ p.media_url }}" /></video>
+        <video controls preload="metadata" class="w-full h-full object-contain bg-black"><source src="{{ p.media_url }}" /></video>
       {% else %}
-        <img src="{{ p.media_url }}" class="w-full h-full object-cover" />
+        <img src="{{ p.media_url }}" class="w-full h-full object-contain" />
       {% endif %}
-      <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
     </div>
     <div class="p-4">
       {% if p.created_at %}<div class="text-xs text-brand-dark/60">{{ p.created_at }}</div>{% endif %}
