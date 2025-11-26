@@ -1,111 +1,111 @@
 import os
-import uuid
-from datetime import datetime
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from werkzeug.utils import secure_filename
+from database import db
 
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory, session, current_app
-from flask_login import LoginManager, current_user
+app = Flask(__name__)
+app.secret_key = 'supersecretkey_cleanchainguard'
+app.config['UPLOAD_FOLDER'] = 'static/uploads'
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max
 
-from config import Config
-from i18n import init_i18n, t, set_lang_from_request, get_current_lang
-from sheets_db import SheetsDB
-from models import User
+# Ensure upload folder exists
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-login_manager = LoginManager()
-login_manager.login_view = "auth.login"
+@app.route('/login', methods=['POST'])
+def login():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    user = db.get_user_by_email(email)
+    
+    if user and user['password'] == password:
+        session['user_id'] = user['id']
+        session['username'] = user['username']
+        return redirect(url_for('profile'))
+    
+    flash('Invalid credentials', 'error')
+    return redirect(url_for('index'))
 
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        username = request.form.get('username')
+        password = request.form.get('password')
+        confirm = request.form.get('confirm_password')
+        
+        if password != confirm:
+            flash('Passwords do not match', 'error')
+            return redirect(url_for('signup'))
+            
+        if db.get_user_by_email(email):
+            flash('Email already exists', 'error')
+            return redirect(url_for('signup'))
+            
+        db.create_user(email, username, password)
+        flash('Account created! Please login.', 'success')
+        return redirect(url_for('index'))
+        
+    return render_template('signup.html')
 
-@login_manager.user_loader
-def load_user(user_id):
-    db = SheetsDB.get()
-    data = db.get_user_by_id(user_id)
-    if not data:
-        return None
-    return User.from_record(data)
+@app.route('/gallery')
+def gallery():
+    posts = db.get_all_posts()
+    # Enrich posts with username if needed, for now just raw
+    return render_template('gallery.html', posts=posts)
 
+@app.route('/chat')
+def chat():
+    if 'user_id' not in session:
+        return redirect(url_for('index'))
+    messages = db.get_messages()
+    return render_template('chat.html', messages=messages)
 
-def create_app():
-    app = Flask(__name__)
-    app.config.from_object(Config())
+@app.route('/ai')
+def ai():
+    return render_template('ai.html')
 
-    os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
+@app.route('/profile')
+def profile():
+    if 'user_id' not in session:
+        return redirect(url_for('index'))
+    user_posts = db.get_user_posts(session['user_id'])
+    return render_template('profile.html', posts=user_posts, username=session['username'])
 
-    # Init i18n
-    init_i18n(app)
+@app.route('/upload', methods=['POST'])
+def upload():
+    if 'user_id' not in session:
+        return redirect(url_for('index'))
+        
+    if 'file' not in request.files:
+        flash('No file part', 'error')
+        return redirect(url_for('profile'))
+        
+    file = request.files['file']
+    if file.filename == '':
+        flash('No selected file', 'error')
+        return redirect(url_for('profile'))
+        
+    if file:
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+        
+        description = request.form.get('description', '')
+        tags = request.form.get('tags', '').split(',')
+        
+        db.create_post(session['user_id'], filename, description, tags)
+        flash('Post created!', 'success')
+        
+    return redirect(url_for('profile'))
 
-    # Init DB (Google Sheets)
-    SheetsDB.init(app)
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
 
-    # Login manager
-    login_manager.init_app(app)
-
-    # Blueprints
-    from blueprints.auth import bp as auth_bp
-    from blueprints.gallery import bp as gallery_bp
-    from blueprints.chat import bp as chat_bp
-    from blueprints.ai import bp as ai_bp
-
-    app.register_blueprint(auth_bp)
-    app.register_blueprint(gallery_bp)
-    app.register_blueprint(chat_bp)
-    app.register_blueprint(ai_bp)
-
-    @app.before_request
-    def _set_lang():
-        # Ensure translations are up-to-date and language set
-        try:
-            # Re-init i18n lightly to catch JSON changes without restart
-            init_i18n(current_app)
-        except Exception:
-            pass
-        set_lang_from_request()
-
-    @app.context_processor
-    def inject_globals():
-        # Active section helper
-        ep = (request.endpoint or "")
-        if ep.startswith("gallery."):
-            active = "gallery"
-        elif ep.startswith("chat."):
-            active = "chats"
-        elif ep.startswith("ai."):
-            active = "ai"
-        elif ep.startswith("auth."):
-            active = "auth"
-        elif ep == "index":
-            active = "home"
-        else:
-            active = ""
-
-        # Unread chats count
-        unread = 0
-        try:
-            if current_user.is_authenticated:
-                unread = SheetsDB.get().count_unread_chats_for_user(str(current_user.id))
-        except Exception:
-            unread = 0
-
-        return {
-            "_": t,
-            "current_lang": get_current_lang(),
-            "current_user": current_user,
-            "active_section": active,
-            "unread_chats": unread,
-        }
-
-    @app.get("/")
-    def index():
-        return render_template("index.html")
-
-    @app.get("/uploads/<path:filename>")
-    def uploads(filename):
-        return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
-
-    return app
-
-
-app = create_app()
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True, port=5001)

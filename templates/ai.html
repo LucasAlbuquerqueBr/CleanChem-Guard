@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="ai-interface glass-card">
+    <div class="ai-header">
+        <div class="ai-avatar">
+            <i class="fas fa-brain" style="color: white;"></i>
+        </div>
+        <div>
+            <h3>CleanChain AI</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">Expert in Chemical Safety & Best Practices</p>
+        </div>
+    </div>
+    
+    <div class="message-list" id="aiChatBox" style="background: rgba(0,0,0,0.3);">
+        <div class="message" style="background: rgba(14, 165, 233, 0.1); border-color: var(--accent);">
+            Hello! I am your AI assistant. Ask me anything about cleaning products, chemical safety, or stain removal techniques.
+        </div>
+    </div>
+    
+    <div style="padding: 1.5rem; border-top: 1px solid var(--glass-border);">
+        <form id="aiForm" style="display: flex; gap: 1rem;">
+            <input type="text" id="aiInput" placeholder="Ask about chemical reactions, safety..." style="flex: 1; padding: 1rem; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: white;">
+            <button type="submit" class="cta-btn" style="border: none; cursor: pointer;"><i class="fas fa-paper-plane"></i></button>
+        </form>
+    </div>
+</div>
+
+<script>
+document.getElementById('aiForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const input = document.getElementById('aiInput');
+    const text = input.value;
+    if (!text) return;
+    
+    const chatBox = document.getElementById('aiChatBox');
+    
+    // User message
+    const userDiv = document.createElement('div');
+    userDiv.className = 'message own';
+    userDiv.textContent = text;
+    chatBox.appendChild(userDiv);
+    
+    input.value = '';
+    chatBox.scrollTop = chatBox.scrollHeight;
+    
+    // Simulate AI thinking
+    setTimeout(() => {
+        const aiDiv = document.createElement('div');
+        aiDiv.className = 'message';
+        aiDiv.style.background = 'rgba(14, 165, 233, 0.1)';
+        aiDiv.style.borderColor = 'var(--accent)';
+        
+        // Simple mock responses based on keywords
+        let response = "I'm analyzing that query. Could you provide more details about the surface material?";
+        const lowerText = text.toLowerCase();
+        
+        if (lowerText.includes('bleach') && lowerText.includes('ammonia')) {
+            response = "⚠️ DANGER: Never mix bleach and ammonia! This creates toxic chloramine gas which can be fatal. Evacuate the area if this has occurred.";
+        } else if (lowerText.includes('marble')) {
+            response = "For marble, avoid acidic cleaners like vinegar or lemon. Use a pH-neutral stone cleaner to prevent etching.";
+        } else if (lowerText.includes('mold')) {
+            response = "For mold removal, hydrogen peroxide is a safer alternative to bleach on porous surfaces. Ensure good ventilation.";
+        }
+        
+        aiDiv.textContent = response;
+        chatBox.appendChild(aiDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }, 1000);
+});
+</script>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-sidebar glass-card" style="border-radius: 0;">
+        <h3 style="padding-bottom: 1rem; border-bottom: 1px solid var(--glass-border);">Conversations</h3>
+        <div class="user-list" style="margin-top: 1rem;">
+            <!-- Mock users -->
+            <div style="padding: 1rem; border-bottom: 1px solid var(--glass-border); cursor: pointer; display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 40px; height: 40px; background: #334155; border-radius: 50%;"></div>
+                <div>
+                    <div style="font-weight: bold;">Sarah J.</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">Professional Cleaner</div>
+                </div>
+            </div>
+            <div style="padding: 1rem; border-bottom: 1px solid var(--glass-border); cursor: pointer; display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 40px; height: 40px; background: #334155; border-radius: 50%;"></div>
+                <div>
+                    <div style="font-weight: bold;">Mike T.</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">Chemical Expert</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="chat-main">
+        <div class="message-list">
+            {% for msg in messages %}
+                <div class="message {% if msg.sender_id == session.user_id %}own{% endif %}">
+                    {{ msg.content }}
+                </div>
+            {% endfor %}
+            
+            <!-- Mock messages for demo -->
+            <div class="message">Hello! Has anyone tried the new eco-solvent?</div>
+            <div class="message own">Yes, it works wonders on marble surfaces!</div>
+        </div>
+        
+        <div class="chat-input" style="margin-top: auto; padding-top: 1rem;">
+            <form style="display: flex; gap: 1rem;">
+                <input type="text" placeholder="Type a message..." style="flex: 1; padding: 1rem; border-radius: 50px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: white;">
+                <button type="button" class="cta-btn" style="padding: 0 2rem;">Send</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

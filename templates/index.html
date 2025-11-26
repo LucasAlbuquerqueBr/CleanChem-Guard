@@ -1,89 +1,105 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
 {% block content %}
-
-<!-- Hero -->
-<section class="relative overflow-hidden rounded-2xl" style="background:#2C2E43">
-  <div class="absolute inset-0 bg-cover bg-center opacity-30" style="background-image:url('{{ url_for('static', filename='hero/house.png') }}');"></div>
-  <div class="absolute inset-0 bg-gradient-to-b from-[#2C2E43]/70 via-[#2C2E43]/60 to-[#2C2E43]/80"></div>
-  <div class="relative z-10 px-6 py-12 md:py-20 text-brand-white">
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-      <div class="flex items-center gap-4">
-        <img src="{{ url_for('static', filename='branding/logo.png') }}" alt="CleanChem Guard" class="h-20 w-20 object-contain drop-shadow"/>
-        <div>
-          <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight">{{ _('hero.title') }}</h1>
-          <p class="text-brand-gray text-lg md:text-xl">{{ _('hero.tagline') }}</p>
+<section class="hero">
+    <img src="{{ url_for('static', filename='images/hero.png') }}" alt="Luxury Clean Living Room" class="hero-bg">
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1 data-i18n="hero_title">CleanChem Guard</h1>
+            <p class="hero-subtitle" data-i18n="hero_subtitle">Conectando quem faz da limpeza uma arte.</p>
+            <p data-i18n="hero_desc">Conheça a CleanChainGuard, uma rede inteligente de cleaners que trocam conhecimento, segurança e resultados.</p>
         </div>
-      </div>
-      {% if not current_user.is_authenticated %}
-      <div class="flex items-center gap-3">
-        <a href="{{ url_for('auth.login') }}" class="px-5 py-2.5 rounded-lg bg-white text-brand-dark font-semibold hover:bg-brand-gray transition">{{ _('auth.login') }}</a>
-        <a href="{{ url_for('auth.register') }}" class="px-5 py-2.5 rounded-lg bg-brand-yellow text-brand-dark font-semibold hover:brightness-95 transition">{{ _('auth.register') }}</a>
-      </div>
-      {% endif %}
+        
+        {% if not session.get('user_id') %}
+            <div class="cta-group" id="login-section">
+                <form action="{{ url_for('login') }}" method="POST" class="glass-card auth-card">
+                    <h3 style="margin-bottom: 1rem;" data-i18n="login_title">Entrar na comunidade</h3>
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password" placeholder="Senha" required>
+                    </div>
+                    <div class="auth-actions">
+                        <button type="submit" class="cta-btn primary-btn" data-i18n="login_btn">Login</button>
+                        <p class="auth-link-text">
+                            <span data-i18n="new_here">Novo aqui?</span> 
+                            <a href="{{ url_for('signup') }}" class="text-link" data-i18n="create_account">Criar uma conta</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        {% else %}
+            <a href="{{ url_for('gallery') }}" class="cta-btn" data-i18n="explore_gallery">Explorar Galeria</a>
+        {% endif %}
     </div>
-    <div class="mt-10 max-w-3xl">
-      <p class="text-xl md:text-2xl text-brand-gray">{{ _('hero.blurb') }}</p>
-      {% if not current_user.is_authenticated %}
-      <div class="mt-8">
-        <a href="{{ url_for('auth.register') }}" class="inline-block px-7 py-3.5 rounded-lg bg-brand-yellow text-brand-dark font-bold hover:brightness-95 shadow">{{ _('hero.cta_join') }}</a>
-      </div>
-      {% endif %}
-    </div>
-  </div>
-  <div class="absolute -right-24 -bottom-24 h-72 w-72 rounded-full bg-brand-yellow/10 blur-2xl"></div>
-  <div class="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-2xl"></div>
 </section>
 
-<!-- Features -->
-<section class="mt-10 bg-white rounded-2xl shadow p-7 md:p-12">
-  <div class="max-w-4xl mx-auto text-center">
-    <h2 class="text-3xl md:text-4xl font-extrabold text-brand-dark tracking-tight">{{ _('hero.section_title') }}</h2>
-    <p class="mt-5 text-brand-dark/80 text-lg">{{ _('hero.section_p1') }}</p>
-    <p class="mt-3 text-brand-dark/80 text-lg">{{ _('hero.section_p2') }}</p>
-    <p class="mt-3 text-brand-dark/80 text-lg">{{ _('hero.section_p3') }}</p>
-    <p class="mt-3 text-brand-dark/80 text-lg">{{ _('hero.section_p4') }}</p>
-
-    <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
-      <div class="p-5 rounded-lg border">
-        <div class="text-2xl">🧠</div>
-        <div class="mt-2 font-semibold text-lg">{{ _('hero.f1_title') }}</div>
-        <div class="text-brand-dark/80">{{ _('hero.f1_desc') }}</div>
-      </div>
-      <div class="p-5 rounded-lg border">
-        <div class="text-2xl">⚙️</div>
-        <div class="mt-2 font-semibold text-lg">{{ _('hero.f2_title') }}</div>
-        <div class="text-brand-dark/80">{{ _('hero.f2_desc') }}</div>
-      </div>
-      <div class="p-5 rounded-lg border">
-        <div class="text-2xl">🧴</div>
-        <div class="mt-2 font-semibold text-lg">{{ _('hero.f3_title') }}</div>
-        <div class="text-brand-dark/80">{{ _('hero.f3_desc') }}</div>
-      </div>
-      <div class="p-5 rounded-lg border">
-        <div class="text-2xl">💬</div>
-        <div class="mt-2 font-semibold text-lg">{{ _('hero.f4_title') }}</div>
-        <div class="text-brand-dark/80">{{ _('hero.f4_desc') }}</div>
-      </div>
+<section class="mission" style="padding: 5rem 2rem; text-align: center;">
+    <div class="container" style="max-width: 800px; margin: 0 auto;">
+        <h2 data-i18n="section1_title">Juntos, elevamos o padrão da limpeza.</h2>
+        <p style="color: var(--text-muted); font-size: 1.2rem; margin-top: 1rem;" data-i18n="section1_desc">Conecte-se com profissionais que compartilham os melhores produtos, técnicas e experiências.</p>
     </div>
-  </div>
 </section>
 
-<!-- Bottom CTA -->
-<section class="mt-10 bg-brand-dark text-brand-white rounded-2xl p-7 md:p-12">
-  <div class="max-w-4xl mx-auto">
-    <h3 class="text-2xl md:text-3xl font-extrabold">{{ _('hero.bottom_title') }}</h3>
-    <p class="mt-4 text-brand-gray text-lg">{{ _('hero.bottom_p1') }}</p>
-    <p class="mt-3 text-brand-gray text-lg">{{ _('hero.bottom_p2') }}</p>
-    <p class="mt-3 text-brand-gray text-lg">{{ _('hero.bottom_p3') }}</p>
-  </div>
-  <div class="mt-6 flex gap-3">
-    {% if current_user.is_authenticated %}
-      <a href="{{ url_for('gallery.gallery_index') }}" class="px-5 py-2.5 rounded-lg bg-white text-brand-dark font-semibold hover:bg-brand-gray">{{ _('hero.view_gallery') }}</a>
-    {% else %}
-      <a href="{{ url_for('auth.login') }}" class="px-5 py-2.5 rounded-lg bg-brand-yellow text-brand-dark font-semibold hover:brightness-95">{{ _('auth.login') }}</a>
-      <a href="{{ url_for('auth.register') }}" class="px-5 py-2.5 rounded-lg bg-white text-brand-dark font-semibold hover:bg-brand-gray">{{ _('auth.register') }}</a>
-    {% endif %}
-  </div>
+<section class="about-community" style="padding: 5rem 2rem; background: rgba(255, 255, 255, 0.05);">
+    <div class="container" style="max-width: 1000px; margin: 0 auto; display: flex; align-items: center; gap: 3rem; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 300px;">
+             <h2 data-i18n="section2_title">A CleanChainGuard é a comunidade onde quem limpa com excelência se torna referência</h2>
+             <p style="color: var(--text-muted); margin-top: 1rem;" data-i18n="section2_desc">Agora com o suporte de uma inteligência artificial que tira suas dúvidas sobre produtos, métodos e segurança.</p>
+        </div>
+        <div style="flex: 1; min-width: 300px;">
+             <div class="glass-card" style="padding: 2rem;">
+                 <h3 data-i18n="section3_title">Use melhor cada produto</h3>
+                 <p style="color: var(--text-muted);" data-i18n="section3_desc">Trabalhe com mais confiança e cuide da sua saúde e bem-estar. Produtividade, segurança e sabedoria tudo em um só lugar.</p>
+             </div>
+        </div>
+    </div>
 </section>
 
+<section class="features" style="padding: 5rem 2rem; background: var(--primary);">
+    <div class="container" style="max-width: 1200px; margin: 0 auto;">
+        <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+            <div class="feature-card glass-card" style="text-align: center;">
+                <i class="fas fa-book-open" style="font-size: 2.5rem; color: var(--accent); margin-bottom: 1rem;"></i>
+                <h3 data-i18n="feat1_title">Sabedoria compartilhada</h3>
+                <p style="color: var(--text-muted);" data-i18n="feat1_desc">Aprenda com a experiência de outros profissionais.</p>
+            </div>
+            <div class="feature-card glass-card" style="text-align: center;">
+                <i class="fas fa-tachometer-alt" style="font-size: 2.5rem; color: var(--gold); margin-bottom: 1rem;"></i>
+                <h3 data-i18n="feat2_title">Produtividade real</h3>
+                <p style="color: var(--text-muted);" data-i18n="feat2_desc">Otimize tempo e resultados com métodos testados.</p>
+            </div>
+            <div class="feature-card glass-card" style="text-align: center;">
+                <i class="fas fa-shield-alt" style="font-size: 2.5rem; color: #10b981; margin-bottom: 1rem;"></i>
+                <h3 data-i18n="feat3_title">Qualidade e segurança</h3>
+                <p style="color: var(--text-muted);" data-i18n="feat3_desc">Produtos recomendados e uso seguro comprovado com ajuda de inteligência artificial.</p>
+            </div>
+             <div class="feature-card glass-card" style="text-align: center;">
+                <i class="fas fa-users" style="font-size: 2.5rem; color: #f472b6; margin-bottom: 1rem;"></i>
+                <h3 data-i18n="feat4_title">Conexão e comunidade</h3>
+                <p style="color: var(--text-muted);" data-i18n="feat4_desc">Interaja com quem vive os mesmos desafios e conquistas.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="newsletter" style="padding: 5rem 2rem; background: rgba(15, 23, 42, 0.6);">
+    <div class="container" style="max-width: 600px; margin: 0 auto; text-align: center;">
+        <h3 data-i18n="newsletter_title">Fique por dentro das novidades</h3>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;" data-i18n="newsletter_desc">Receba dicas exclusivas e atualizações da comunidade.</p>
+        <form class="newsletter-form" style="display: flex; gap: 1rem;">
+            <input type="email" placeholder="Seu melhor email" style="flex: 1; padding: 1rem; border-radius: 50px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: white;">
+            <button type="submit" class="cta-btn" data-i18n="subscribe_btn">Inscrever-se</button>
+        </form>
+    </div>
+</section>
+
+<section class="closing" style="padding: 5rem 2rem; text-align: center; background: linear-gradient(to top, #0f172a, rgba(15, 23, 42, 0.8));">
+    <div class="container" style="max-width: 800px; margin: 0 auto;">
+        <h2 data-i18n="closing_title">Mais do que uma plataforma — uma rede de evolução.</h2>
+        <p style="color: var(--text-muted); margin: 1.5rem 0;" data-i18n="closing_desc">Na CleanChainGuard, cada profissional tem voz. Compartilhe métodos, aprenda novas técnicas, descubra produtos aprovados por quem realmente entende e aumente sua segurança no trabalho.</p>
+        <h3 style="color: var(--accent);" data-i18n="closing_tagline">Limpeza inteligente começa com colaboração.</h3>
+    </div>
+</section>
 {% endblock %}

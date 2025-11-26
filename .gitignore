@@ -1,29 +1,6 @@
-# Python artifacts
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-*.so
-
-# Environments
-.env
 .venv/
-venv/
-env/
-
-# OS/editor
+__pycache__/
+*.pyc
 .DS_Store
-Thumbs.db
-.idea/
-.vscode/
-
-# Test/cache
-.pytest_cache/
-.mypy_cache/
-
-# Logs
-*.log
-
-# Local uploads (already-tracked files stay tracked)
-uploads/
-
+static/uploads/
+local_db.json

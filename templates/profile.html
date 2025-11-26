@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="padding-top: 100px; max-width: 1000px; margin: 0 auto;">
+    <div class="glass-card" style="display: flex; align-items: center; gap: 2rem; margin-bottom: 3rem;">
+        <div style="width: 100px; height: 100px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: white;">
+            {{ username[0].upper() }}
+        </div>
+        <div>
+            <h2>{{ username }}</h2>
+            <p style="color: var(--text-muted);">Professional Cleaner</p>
+            <div style="margin-top: 1rem; display: flex; gap: 2rem;">
+                <div><strong>{{ posts|length }}</strong> Posts</div>
+                <div><strong>0</strong> Followers</div>
+                <div><strong>0</strong> Following</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card" style="margin-bottom: 3rem;">
+        <h3>Upload New Work</h3>
+        <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data" style="margin-top: 1rem;">
+            <div class="form-group">
+                <label>Select Image</label>
+                <input type="file" name="file" accept="image/*" required style="padding: 0.5rem;">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <input type="text" name="description" placeholder="e.g. Deep cleaning of marble floor..." required>
+            </div>
+            <div class="form-group">
+                <label>Tags (comma separated)</label>
+                <input type="text" name="tags" placeholder="e.g. marble, floor, shine">
+            </div>
+            <button type="submit" class="cta-btn" style="border: none; cursor: pointer;">Upload Post</button>
+        </form>
+    </div>
+
+    <h3 style="margin-bottom: 1.5rem;">My Portfolio</h3>
+    <div class="gallery-grid" style="padding: 0; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));">
+        {% for post in posts %}
+        <div class="gallery-item">
+            <div class="card-3d">
+                <img src="{{ url_for('static', filename='uploads/' + post.image_path) }}" class="card-img" alt="Post">
+                <div class="card-overlay">
+                    <p>{{ post.description }}</p>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <p style="color: var(--text-muted);">You haven't posted anything yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

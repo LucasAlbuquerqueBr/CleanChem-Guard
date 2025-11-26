@@ -1,7 +1,5 @@
-Flask==3.0.3
-Flask-Login==0.6.3
-gspread==6.1.2
-google-auth==2.35.0
-openai==1.51.2
-python-dotenv==1.0.1
-werkzeug==3.0.4
+flask
+gspread
+oauth2client
+python-dotenv
+werkzeug
